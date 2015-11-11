@@ -48,12 +48,8 @@
 # Imports are listed in the order prescribed by `PEP 8
 # <http://www.python.org/dev/peps/pep-0008/#imports>`_.
 #
-# Library imports
-# ---------------
-# None needed.
-#
-# Third-party imports
-# -------------------
+# Library/Third-party imports
+# ---------------------------
 # None needed.
 #
 # Local imports
@@ -72,7 +68,7 @@ from std_srvs.srv import Empty as EmptyServiceType
 # For calling services which take parameters.
 from ardrone_autonomy.srv import CamSelect, \
   FlightAnim, LedAnim, RecordEnable
-from time import sleep
+
 
 count = 0
 
@@ -99,6 +95,9 @@ class MavControl(ButtonGui):
 
     # This is called when the pbPressed button is pressed.
     # Naming is similar for other functions.
+
+    # Take Off/Land Functions
+    # ------------------------
     def on_pbTakeoff_pressed(self):
         print("TAKE OFF!")
         self.controller.SendTakeoff()
@@ -106,7 +105,7 @@ class MavControl(ButtonGui):
     def on_pbLand_pressed(self):
         print("LAND")
         self.controller.SendLand()
-        
+
     def on_pbFlatTrim_pressed(self):
         print("Flat trim")
         self.controller.SetFlatTrim()
@@ -114,7 +113,9 @@ class MavControl(ButtonGui):
     def on_pbEmergency_pressed(self):
         print("Reset")
         self.controller.SendEmergency()
-        
+    
+    # Accessory Functions
+    # ----------------------
     def on_pbLED_pressed(self):
         print("Animation #", self.dialAnimation.value())
         self.controller.SetLedAnimation(self.dialAnimation.value(), 5, 3)
@@ -123,6 +124,8 @@ class MavControl(ButtonGui):
         print("Camera toggle")
         self.controller.ToggleCamera()
     
+    # Flight Command Functions
+    # -------------------------
     def on_pbUp_pressed(self):
         print("Up")
         self.controller.SetCommand(roll=0, pitch=0,
@@ -196,6 +199,8 @@ class MavControl(ButtonGui):
         print("Rotate right done.")
         self.controller.hover()
 
+    # Autonomy Check
+    # --------------
     @pyqtSlot(bool)
     def on_cbAuto_clicked(self,
       # True is the checkbox is checked; False if not.
