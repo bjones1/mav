@@ -75,6 +75,17 @@ from ardrone_autonomy.srv import CamSelect, \
 from time import sleep
 
 count = 0
+
+# creates an enum for the auto flying state machine
+class Enum(frozenset):
+    def __getattr__(self, name):
+        if name in self:
+            return name
+        raise AttributeError
+
+# defines the "state" for each auto flying state
+_MAV_STATES = Enum( ('Takeoff', 'Find_Target', 'Increase_Alt', 'Fly_Over', 'Land') )
+
 # The class below groups together the code and data used
 # to tell the MAV what to do based on user GUI clicks.
 # ``MavControl`` is the name of the class we're defining
@@ -197,12 +208,14 @@ class MavControl(ButtonGui):
             # Create a timer for use in ``fly()``.
             self.elapsedTimer = QElapsedTimer()
         
-        elif not checked:
+        else checked:
             self.controller.SendLand()
         
-        else:
-            # Return to a hover when leaving auto mode.
-            self.controller.hover()
+        # This code will never get run since the state of a checkbox will 
+        # only be checked or unchecked
+        # else:
+        #     # Return to a hover when leaving auto mode.
+        #     self.controller.hover()
         
     # This is only called when the Auto checkbox is checked.
     def fly(self,
